@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using System.IO;
-using OnlineStore.Context;
-namespace OnlineStore.Configurations
+namespace OnlineStore.Context
 {
-    public static class DbContextConfigurator
+    public class StoreDbContextFactory : IDesignTimeDbContextFactory<StoreDbContext>
     {
-        public static DbContextOptions<StoreDbContext> Configure()
+        public StoreDbContext CreateDbContext(string[] args)
         {
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -15,7 +15,7 @@ namespace OnlineStore.Configurations
             var connectionString = configuration.GetConnectionString("MSSQLConnection");
             var optionsBuilder = new DbContextOptionsBuilder<StoreDbContext>();
             optionsBuilder.UseSqlServer(connectionString);
-            return optionsBuilder.Options;
+            return new StoreDbContext(optionsBuilder.Options);
         }
     }
 }
